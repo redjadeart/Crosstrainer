@@ -76,6 +76,8 @@ The Arduino UNO R4 WiFi was used during early tests, but is no longer part of th
 * Implement BLE/WiFi logging (e.g. using ESP32) for tracking training sessions.
 * Add enclosure and buttons for user modes.
 
+---
+
 # 💡 交互式灯光系统与椭圆机
 
 一个基于 Arduino 的互动项目，使用 30 个 LED、电容触摸传感器（MPR121）和运动传感器（MPU6050），将用户在椭圆机上的动作和交互进行可视化。
