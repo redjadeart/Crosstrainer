@@ -6,7 +6,7 @@ An Arduino-based interactive project that visualizes user movement and interacti
 
 ## 🎯 Objective
 
-The goal is to combine movement detection with responsive lighting to create intuitive and motivating feedback during training.
+The goal is to combine motion detection and touch interaction with dynamic lighting to provide intuitive and motivational feedback during physical exercise.
 
 ---
 
@@ -14,35 +14,37 @@ The goal is to combine movement detection with responsive lighting to create int
 
 ### ✋ Scenario 1: Touching the Crosstrainer Handles
 
-- There are 30 LEDs, 15 on each side.
-- When the user touches the small side handles:
-  - → The LEDs light up sequentially from back to front.
-  - → Until all 30 are illuminated.
+- The system includes 30 LEDs — 15 on the left, 15 on the right.
+- When the user touches the small handles of the crosstrainer:
+  - → The LEDs light up one by one from back to front.
+  - → The effect continues until all 30 LEDs are turned on.
 
-### 🏃 Scenario 2: Movement on the Crosstrainer
+### 🏃 Scenario 2: Movement During Training
 
-- When the user is actively training:
-  - → Only one LED is active at a time.
-  - → Its position depends on the user's leaning/movement.
-  - → The LED changes dynamically as the user moves.
+- When the user is actively moving on the crosstrainer:
+  - → Only one LED is lit at any given time.
+  - → The position of the lit LED reflects the leaning or motion amplitude.
+  - → It changes dynamically in response to user movement.
 
 ---
 
 ## 🛠 Implementation
 
-- 💻 **Controller:** Elegoo MEGA2560 R3  
-- 🧭 **Motion Sensor:** MPU6050  
-- 🙋 **Touch Sensor:** Adafruit MPR121  
-- 🔦 **LEDs:** 30 connected to D22–D51  
-- ⚡ **Power:** 5V external power supply recommended  
+- 💻 **Microcontroller:** Elegoo MEGA2560 R3  
+- 🧭 **Motion Sensor:** MPU6050 (Accelerometer + Gyroscope)  
+- 🙋 **Touch Sensor:** Adafruit MPR121 (Capacitive Touch, 12 Inputs)  
+- 🔦 **LEDs:** 30 standard LEDs connected to digital pins D22–D51  
+- ⚡ **Power Supply:** 5V external power recommended (if using all LEDs simultaneously)
 
 ---
 
-## 📄 Libraries
+## 📄 Required Libraries
 
-- `Adafruit_MPR121` — for capacitive touch input  
-- `MPU6050` by jrowberg — for acceleration and angle sensing  
-- `Wire.h` — for I2C communication  
+Make sure to install these libraries via the Arduino Library Manager:
+
+- [`Adafruit_MPR121`](https://github.com/adafruit/Adafruit_MPR121) — for capacitive touch input  
+- [`MPU6050`](https://github.com/jrowberg/i2cdevlib) — for motion and tilt detection  
+- `Wire.h` — for I2C communication (built-in)
 
 ---
 
@@ -54,7 +56,21 @@ Crosstrainer/
 ├── src/
 │   └── crosstrainer_light_system.ino
 ├── images/
-    └── [Your wiring photos here]
+│   └── system_overview.jpg
+📌 Notes
+This system uses one GPIO pin per LED. Therefore, the MEGA2560 is chosen for its large number of digital pins.
 
-📌 Note
-This project uses only the MEGA2560 as the main controller. The Arduino UNO R4 WiFi was used during early tests, but is no longer part of the final setup.
+All LEDs should be connected with current-limiting resistors (e.g. 220Ω).
+
+Sensors (MPU6050 & MPR121) are connected via I2C:
+
+SDA → Pin 20
+
+SCL → Pin 21
+
+You can adjust the LED animation speed and motion-to-LED mapping in the code.
+
+If LED flickering occurs during training mode, consider adding smoothing or low-pass filtering on the accelerometer input.
+
+The project was originally prototyped with an Arduino UNO R4 WiFi, but the final implementation uses only the MEGA2560 due to pin count and stability.
+
