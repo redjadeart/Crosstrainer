@@ -55,8 +55,6 @@ Crosstrainer/
 ├── README.md
 ├── src/
 │   └── crosstrainer_light_system.ino
-├── images/
-│   └── system_overview.jpg
 
 
 
