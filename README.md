@@ -56,3 +56,5 @@ Crosstrainer/
 ├── images/
     └── [Your wiring photos here]
 
+📌 Note
+This project uses only the MEGA2560 as the main controller. The Arduino UNO R4 WiFi was used during early tests, but is no longer part of the final setup.
