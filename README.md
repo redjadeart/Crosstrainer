@@ -57,20 +57,3 @@ Crosstrainer/
 │   └── crosstrainer_light_system.ino
 ├── images/
 │   └── system_overview.jpg
-📌 Notes
-This system uses one GPIO pin per LED. Therefore, the MEGA2560 is chosen for its large number of digital pins.
-
-All LEDs should be connected with current-limiting resistors (e.g. 220Ω).
-
-Sensors (MPU6050 & MPR121) are connected via I2C:
-
-SDA → Pin 20
-
-SCL → Pin 21
-
-You can adjust the LED animation speed and motion-to-LED mapping in the code.
-
-If LED flickering occurs during training mode, consider adding smoothing or low-pass filtering on the accelerometer input.
-
-The project was originally prototyped with an Arduino UNO R4 WiFi, but the final implementation uses only the MEGA2560 due to pin count and stability.
-
