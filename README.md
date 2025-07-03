@@ -57,3 +57,11 @@ Crosstrainer/
 │   └── crosstrainer_light_system.ino
 ├── images/
 │   └── system_overview.jpg
+
+---
+
+## 📌 Note
+This project uses only the MEGA2560 as the main controller.
+The Arduino UNO R4 WiFi was used during early tests, but is no longer part of the final setup.
+
+
