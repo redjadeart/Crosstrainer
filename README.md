@@ -42,7 +42,7 @@ When the user is actively training:
 
 📄 Libraries
 
-Adafruit_MPR121  — for capacitive touch input
+Adafruit_MPR121 — for capacitive touch input
 
 MPU6050 by jrowberg — for acceleration and angle sensing
 
@@ -60,8 +60,6 @@ Crosstrainer/
 📌 Note
 
 This project uses only the MEGA2560 as the main controller. The Arduino UNO R4 WiFi was used during early tests, but is no longer part of the final setup.
-
-Built with care and LEDs by Lin Zhu / @redjadeart
 
 💡 跨步机交互式灯光系统（中文）
 
@@ -107,7 +105,7 @@ Built with care and LEDs by Lin Zhu / @redjadeart
 
 📄 使用库
 
-Adafruit_MPR121  — 用于电容触摸输入
+Adafruit_MPR121 — 用于电容触摸输入
 
 MPU6050 by jrowberg — 用于加速度与角度感知
 
@@ -125,6 +123,3 @@ Crosstrainer/
 📌 说明
 
 项目最终仅使用 MEGA2560 主控板。早期测试曾使用 Arduino UNO R4 WiFi，但已 不再使用。
-
-由 Lin Zhu / @redjadeart 倾心打造 ✨
-
