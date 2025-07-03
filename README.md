@@ -1,4 +1,4 @@
-# 💡 INTERACTIVE LIGHT SYSTEM WITH CROSSTRAINER / 跨步机交互式灯光系统
+# 💡 INTERACTIVE LIGHT SYSTEM WITH CROSSTRAINER
 
 An Arduino-based interactive project that visualizes user movement and interaction on a crosstrainer using 30 LEDs, a capacitive touch sensor (MPR121), and a motion sensor (MPU6050).
 
