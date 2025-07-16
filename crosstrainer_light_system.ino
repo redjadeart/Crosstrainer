@@ -1,100 +1,109 @@
-// ============================================
-// Interaktives Lichtsystem mit Crosstrainer
-// Author: Lin Zhu / redjadeart
-// Platform: Elegoo MEGA2560 R3 + MPU6050 + MPR121 + 30 LEDs
-// ============================================
-
 #include <Wire.h>
-#include <Adafruit_MPR121.h>
-#include <MPU6050.h>
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
+#include "Adafruit_MPR121.h"
+#include <math.h>
 
-// -------- LED 设置 / LED Configuration --------
-const int ledPins[30] = {
-  22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,   // 左边 / Left side
-  37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51    // 右边 / Right side
-};
+Adafruit_MPU6050 mpu;
+Adafruit_MPR121  cap = Adafruit_MPR121();
 
-// -------- 传感器定义 / Sensor Definitions --------
-Adafruit_MPR121 touchSensor = Adafruit_MPR121();
-MPU6050 mpu;
+// Touch‑Hysterese
+bool  invertiert = false;
 
-// -------- 状态变量 / State Variables --------
-bool scenario1_active = false;
+// Pitch‑Glättung
+const int FILTER_SIZE = 10;
+float pitchBuffer[FILTER_SIZE];
+int   bufferIndex   = 0;
+bool  bufferFilled  = false;
+
+// Timeout
+unsigned long lastPitchChangeTime = 0;
+float         lastPitchForTimeout = 0;
+bool          systemActive        = true;
+const unsigned long TIMEOUT_DURATION = 30000;   // 30 s
+const float         PITCH_THRESHOLD  = 1.0;     // 1 °
 
 void setup() {
-  Serial.begin(9600);
-  Wire.begin();
+  Serial.begin(115200);
 
-  // 初始化 MPU6050 / Initialize motion sensor
-  mpu.initialize();
-  if (!mpu.testConnection()) {
-    Serial.println("MPU6050 connection failed!");
-  } else {
-    Serial.println("MPU6050 ready.");
-  }
+  if (!mpu.begin()) { Serial.println("MPU6050 nicht gefunden!"); while (1); }
+  if (!cap.begin(0x5A)) { Serial.println("MPR121 nicht gefunden!"); while (1); }
 
-  // 初始化 MPR121 触摸传感器 / Initialize touch sensor
-  if (!touchSensor.begin(0x5A)) {
-    Serial.println("MPR121 not found!");
-    while (1);
-  } else {
-    Serial.println("MPR121 ready.");
-  }
+  for (int p = 22; p <= 51; p++) { pinMode(p, OUTPUT); digitalWrite(p, LOW); }
 
-  // 设置 LED 引脚 / Initialize LED pins
-  for (int i = 0; i < 30; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], LOW);
-  }
+  lastPitchChangeTime = millis();
+  Serial.println("System gestartet");
 }
 
 void loop() {
-  touchSensor.read();
+  /* ---------- MPU6050 ---------- */
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+  float rawPitch = atan2(a.acceleration.x,
+                         sqrt(a.acceleration.y * a.acceleration.y +
+                              a.acceleration.z * a.acceleration.z)) * 180.0 / PI;
 
-  // 检测是否有任一触摸点 / Detect any touch on the sensor
-  bool touched = false;
-  for (int i = 0; i < 12; i++) {
-    if (touchSensor.touched() & (1 << i)) {
-      touched = true;
-      break;
+  /* ---------- Pitch glätten ---------- */
+  pitchBuffer[bufferIndex] = rawPitch;
+  bufferIndex = (bufferIndex + 1) % FILTER_SIZE;
+  if (bufferIndex == 0) bufferFilled = true;
+
+  float pitch = 0;
+  int   n     = bufferFilled ? FILTER_SIZE : bufferIndex;
+  for (int i = 0; i < n; i++) pitch += pitchBuffer[i];
+  pitch /= n;
+
+  pitch = constrain(pitch, -8.0, 22.0);
+  int idx = map(pitch, -8, 22, 0, 14);   // 0…14
+
+  /* ---------- Timeout‑Überwachung ---------- */
+  if (fabs(pitch - lastPitchForTimeout) > PITCH_THRESHOLD) {
+    lastPitchChangeTime = millis();
+    systemActive        = true;
+    lastPitchForTimeout = pitch;
+  }
+  if (millis() - lastPitchChangeTime > TIMEOUT_DURATION) {
+    if (systemActive) { systemActive = false; Serial.println("Timeout → alles aus"); }
+  }
+
+  /* ---------- Touch‑Hysterese ---------- */
+  uint16_t tVal = cap.filteredData(0);
+  if (invertiert && tVal > 60)          invertiert = false;
+  else if (!invertiert && tVal < 40)    invertiert = true;
+
+  /* ---------- Relais‑Steuerung ---------- */
+  for (int i = 0; i < 15; i++) {
+    int rPin        = 22 + (i * 2);                  // rechts direkt
+    int rPinMirror  = 22 + ((14 - i) * 2);           // rechts gespiegelt
+    int lPin        = 23 + (i * 2);                  // links direkt
+    int lPinMirror  = 23 + ((14 - i) * 2);           // links gespiegelt
+
+    if (!systemActive) {                    // Timeout: alles aus
+      digitalWrite(rPin, LOW);  digitalWrite(lPin, LOW);
+    }
+    else if (invertiert) {                  // Touch‑Modus: mehrere, gespiegelt
+      if (i <= idx) {
+        digitalWrite(rPin, HIGH); digitalWrite(lPinMirror, HIGH);
+      } else {
+        digitalWrite(rPin, LOW);  digitalWrite(lPinMirror, LOW);
+      }
+    }
+    else {                                  // Normal‑Modus: EIN Paar, gegensinnig (jetzt umgekehrt!)
+      if (i == idx) {
+        digitalWrite(rPinMirror, HIGH);  // rechts gespiegelt
+        digitalWrite(lPin,       HIGH);  // links direkt
+      } else {
+        digitalWrite(rPinMirror, LOW);
+        digitalWrite(lPin,       LOW);
+      }
     }
   }
 
-  if (touched) {
-    runScenario1();
-    scenario1_active = true;
-  } else {
-    scenario1_active = false;
-    runScenario2();
-  }
+  /* ---------- Debug ---------- */
+  Serial.print("Pitch "); Serial.print(pitch, 2);
+  Serial.print("°, Touch "); Serial.print(tVal);
+  Serial.print(", Modus ");  Serial.print(invertiert ? "Invertiert" : "Normal");
+  Serial.print(", Aktiv ");  Serial.println(systemActive ? "Ja" : "Nein");
 
-  delay(50);
+  delay(20);
 }
-
-// ---------------
-// 场景1: 依次点亮所有灯 / Light up LEDs sequentially
-// ---------------
-void runScenario1() {
-  for (int i = 0; i < 30; i++) {
-    digitalWrite(ledPins[i], HIGH);
-    delay(80);
-  }
-}
-
-// ---------------
-// 场景2: 根据动作控制灯的位置 / Map movement to LED position
-// ---------------
-void runScenario2() {
-  int16_t ax, ay, az;
-  mpu.getAcceleration(&ax, &ay, &az);
-
-  // 使用 x 轴加速度映射灯泡位置 / Use X-axis acceleration to select LED index
-  int ledIndex = map(ax, -17000, 17000, 0, 29);
-  ledIndex = constrain(ledIndex, 0, 29);
-
-  // 点亮指定灯，关闭其余 / Light up one LED, turn off others
-  for (int i = 0; i < 30; i++) {
-    digitalWrite(ledPins[i], i == ledIndex ? HIGH : LOW);
-  }
-}
-
