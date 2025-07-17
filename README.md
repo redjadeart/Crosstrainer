@@ -29,11 +29,11 @@ Kombination von Bewegungserkennung und Berührungsinteraktion zur Steuerung eine
 
 ## 🛠 Komponenten
 
-* Arduino MEGA 2560 oder Uno
-* MPU6050 (Beschleunigung + Gyroskop)
-* MPR121 kapazitiver Touchsensor
-* 30 digitale Ausgänge für 15 Relaispaare (Pins D22–D51)
-* 5V externe Stromversorgung empfohlen
+- Arduino MEGA 2560 oder Uno  
+- MPU6050 (Beschleunigung + Gyroskop)  
+- MPR121 kapazitiver Touchsensor  
+- 30 digitale Ausgänge für 15 Relaispaare (Pins D22–D51)  
+- 5V externe Stromversorgung empfohlen
 
 ---
 
@@ -68,15 +68,6 @@ pitch_touch_relais/
 
 ---
 
-## ✅ Erweiterungsmöglichkeiten
-
-* LED-Streifen (z. B. WS2812B) zur visuellen Darstellung
-* OLED-Display zur Anzeige von Status & Winkeln
-* Integration von ESP32 für Bluetooth- oder WLAN-Kommunikation
-* Gehäuse zur Nutzung als fertiges Interaktionsobjekt
-
----
-
 # 💡 继电器控制系统：基于触控与倾斜角度的交互式 Arduino 项目
 
 本项目通过 MPU6050 运动传感器与 MPR121 电容触摸传感器，实现对 15 对继电器的智能控制与交互响应。
@@ -107,11 +98,11 @@ pitch_touch_relais/
 
 ## 🛠 使用元件
 
-* Arduino MEGA 2560 / Uno 
-* MPU6050 三轴加速度/陀螺仪传感器
-* MPR121 电容触摸模块
-* 数字输出控制 30 个继电器（D22–D51）
-* 推荐使用 5V 外接电源
+- Arduino MEGA 2560 / Uno 
+- MPU6050 三轴加速度/陀螺仪传感器
+- MPR121 电容触摸模块
+- 数字输出控制 30 个继电器（D22–D51）
+- 推荐使用 5V 外接电源
 
 
 ---
@@ -147,12 +138,3 @@ pitch_touch_relais/
 
 
 ```
-
----
-
-## ✅ 未来改进（可选）
-
-* 使用 WS2812B 替代继电器，实现灯光效果
-* 增加 OLED 显示屏用于状态与角度显示
-* 使用 ESP32 实现蓝牙/WiFi 控制与数据传输 
-* 外壳封装，构建完整交互装置
