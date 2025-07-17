@@ -1,6 +1,7 @@
 # 💡 RELAIS-STEUERUNG MIT TOUCH & PITCH
 
 Ein Arduino-basiertes System zur interaktiven Steuerung von 15 Relaispaaren über einen Bewegungssensor (MPU6050) und ein kapazitives Touchmodul (MPR121).
+
 ---
 
 ## 🎯 Projektziel
