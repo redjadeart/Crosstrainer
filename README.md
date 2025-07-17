@@ -120,11 +120,10 @@ pitch_touch_relais/
 
 可通过 Arduino 库管理器安装：
 
-* Adafruit_MPU6050
-* Adafruit_MPR121
-* Adafruit_Sensor
-* Wire.h
-
+  `Adafruit_MPU6050`  
+  `Adafruit_MPR121`  
+  `Adafruit_Sensor`  
+  `Wire.h`
 ---
 
 ## 📁 项目结构
