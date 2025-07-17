@@ -6,6 +6,7 @@ Ein Arduino-basiertes System zur interaktiven Steuerung von 15 Relaispaaren übe
 ## 🎯 Projektziel
 
 Kombination von Bewegungserkennung und Berührungsinteraktion zur Steuerung einer symmetrischen Relaismatrix – ideal für kinetische Skulpturen, Lichtinstallationen oder interaktive Geräte.
+
 ---
 
 ## 🤯 Anwendungsszenarien
