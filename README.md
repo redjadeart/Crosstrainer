@@ -38,12 +38,13 @@ Kombination von Bewegungserkennung und Berührungsinteraktion zur Steuerung eine
 ---
 
 ## 📦 Bibliotheken
+  Bitte über den Library Manager installieren:  
 
-Bitte über den Library Manager installieren:
-* Adafruit_MPU6050
-* Adafruit_MPR121
-* Adafruit_Sensor
-* Wire.h
+  `Adafruit_MPU6050`  
+  `Adafruit_MPR121`  
+  `Adafruit_Sensor`  
+  `Wire.h`
+
 
 ---
 
